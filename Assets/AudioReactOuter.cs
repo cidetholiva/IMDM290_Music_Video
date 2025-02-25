@@ -11,7 +11,7 @@ using UnityEngine;
 public class AudioReactOuter : MonoBehaviour
 {
     GameObject[] spheres;
-    static int numSphere = 2000; // increased for smoother shape
+    static int numSphere = 500; // increased for smoother shape
     float time = 0f;
     Vector3[] initPos;
     Vector3[] startPosition, endPosition;

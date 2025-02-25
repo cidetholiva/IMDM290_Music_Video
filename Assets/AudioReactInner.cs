@@ -10,7 +10,7 @@ using UnityEngine;
 public class AudioReactInner : MonoBehaviour
 {
     GameObject[] spheres;
-    static int numSphere = 8000; 
+    static int numSphere = 150; 
     float time = 0f;
     Vector3[] initPos;
     Vector3[] startPosition, endPosition;
