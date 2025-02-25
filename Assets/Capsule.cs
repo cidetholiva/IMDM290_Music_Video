@@ -16,6 +16,7 @@ public class Capsule : MonoBehaviour
     {
        //pill shape in the middle- https://docs.unity3d.com/ScriptReference/PrimitiveType.Capsule.html
         capsule = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+        capsule.transform.parent = transform;
         capsule.transform.position = Vector3.zero;
         capsule.transform.localScale = new Vector3(2f, 2f, 2f); // increase size 
 

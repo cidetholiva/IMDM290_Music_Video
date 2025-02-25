@@ -146,6 +146,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 0}
   detail: 100
-  lineWidth: 1
+  lineWidth: 0.5
   radius: 5
   color: {r: 1, g: 0, b: 0, a: 1}
