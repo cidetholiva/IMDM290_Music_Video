@@ -19,7 +19,7 @@ public class AudioReactOuter : MonoBehaviour
     float t;
     float minScale = 0.5f; //for pulse (smallest scale)
     float maxScale = 3f; // for pulse (laregest scale)
-    float beatThreshold = 0.8f;   // amp value--beat detection
+    float beatAmp = 0.8f;   // amp value--beat detection
     float beatBoost = 1.5f; //boost scale on beat
 
 
@@ -31,7 +31,7 @@ public class AudioReactOuter : MonoBehaviour
         startPosition = new Vector3[numSphere]; 
         endPosition = new Vector3[numSphere]; 
         
-        // Define target positions. Start = random, End = heart 
+        // Define target positions. 
         for (int i = 0; i < numSphere; i++){
             // Random start positions
             float r = 10f; // reduced for closer initial positions
@@ -80,35 +80,38 @@ public class AudioReactOuter : MonoBehaviour
         //https://docs.unity3d.com/ScriptReference/Mathf.PingPong.html
         //creates line that goes back and forth, creates the "breathing" effect
         float baseScale = Mathf.Lerp(minScale, maxScale, AudioSpectrum.audioAmp);
-        float currentScale = (AudioSpectrum.audioAmp > beatThreshold) ? baseScale * beatBoost : baseScale;
+        float currentScale = (AudioSpectrum.audioAmp > beatAmp) ? baseScale * beatBoost : baseScale;
 
         
 
 
         // Measure Time 
-        time += Time.deltaTime;
+        time += (AudioSpectrum.audioAmp > beatAmp) ? Time.deltaTime : 0f;
 
         for (int i = 0; i < numSphere; i++)
         {
             // makes the back and forth motion smoother
             //https://docs.unity3d.com/ScriptReference/Mathf.SmoothStep.html
-            lerpFraction = Mathf.SmoothStep(0, 1, Mathf.PingPong(time * 0.5f, 1));
+            lerpFraction = (AudioSpectrum.audioAmp > beatAmp) ? Mathf.SmoothStep(0, 1, Mathf.PingPong(time * 0.5f, 1)) : 0f;
+
 
             // update position
-            spheres[i].transform.position = Vector3.Lerp(startPosition[i], endPosition[i], lerpFraction) * currentScale;
+            spheres[i].transform.position = Vector3.Lerp(startPosition[i], endPosition[i], lerpFraction) * Mathf.Lerp(1f, currentScale, 0.2f);
 
             // Color Update over time
             Renderer sphereRenderer = spheres[i].GetComponent<Renderer>();
 
             //colors defined
-            Color hotPink = new Color(1f, 0f, 0.5f);
-            Color lightPink = new Color(1f, 0.75f, 0.9f);
-            Color purple = new Color(0.5f, 0f, 0.5f);
+            Color neonBlue = new Color(0f, 1f, 1f);
+            Color neonPink = new Color(1f, 0f, 0.5f);
+            Color neonGreen = new Color(0f, 1f, 0f);
 
             float cycle = Mathf.PingPong(time, 1f);
-            Color baseColor = (cycle < 0.5f) ? Color.Lerp(hotPink, purple, cycle * 2f) : Color.Lerp(purple, lightPink, (cycle - 0.5f) * 2f);
+            Color baseColor = (cycle < 0.5f) ? Color.Lerp(neonBlue, neonGreen, cycle * 2f) : Color.Lerp(neonGreen, neonPink, (cycle - 0.5f) * 2f);
 
-            Color finalColor = (AudioSpectrum.audioAmp > beatThreshold) ? Color.Lerp(baseColor, Color.white, 0.5f) : baseColor;
+            Color finalColor = Color.Lerp(baseColor, Color.white, Mathf.Clamp01(AudioSpectrum.audioAmp * 0.3f));
+
+
 
             sphereRenderer.material.color = finalColor;
 

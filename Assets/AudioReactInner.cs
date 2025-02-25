@@ -89,12 +89,7 @@ public class AudioReactInner : MonoBehaviour
             
             // Color Update over time
             Renderer sphereRenderer = spheres[i].GetComponent<Renderer>();
-            float hue = (float)i / numSphere; // Hue cycles through 0 to 1
-            Color[] colors = { new Color(1f, 0f, 0.5f), new Color(1f, 0.75f, 0.9f), new Color(0.5f, 0f, 0.5f) }; // pinks
-            int colorIndex = (AudioSpectrum.audioAmp > 0.4f) ? 1 : 0; // beat change by color
-            Color color = colors[colorIndex];
-
-            sphereRenderer.material.color = color;
+            sphereRenderer.material.color = Color.Lerp(new Color(0f, 1f, 1f), new Color(1f, 0f, 0.5f), Mathf.Clamp01(AudioSpectrum.audioAmp * 0.3f));
         }
     }
 }
